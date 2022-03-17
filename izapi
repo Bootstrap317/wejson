@@ -149,7 +149,8 @@
   ]
 }
 
-//
+///
+
 
 
 import Radio from '@mui/material/Radio';
@@ -225,7 +226,7 @@ export const Home = () => {
 		)
 }
 
-//
+///
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Box } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
@@ -242,7 +243,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
-import { isAnswer, addAnswer } from "../slices/QuizSlice";
+import { isAnswered, addAnswer } from "../slices/QuizSlice";
 import { FinalScreen } from "./FinalScreen";
 
 export const Question = () => {
@@ -262,12 +263,12 @@ export const Question = () => {
   };
 
   const handlerRadioChange = (event: any, val: any) => {
-    dispatch(isAnswer(val.id));
+    dispatch(isAnswered(val.id));
     dispatch(addAnswer({ id: val.id, value: event.target.value }));
   };
 
   const handlerCheckBox = (event: any, val: any) => {
-    dispatch(isAnswer(val.id));
+    dispatch(isAnswered(val.id));
 
     const newArr = [...val.correctAnswer];
     if (event.target.checked && !newArr.includes(event.target.value)) {
@@ -319,7 +320,7 @@ export const Question = () => {
                 onClick={() => handlerClick(item, index)}
                 key={item.id}
                 style={{
-                  backgroundColor: item.isAnswered ? "red" : "grey",
+                  backgroundColor: item.isAnswer ? "red" : "grey",
                   color: "white",
                   margin: "2px",
                 }}>
@@ -406,7 +407,7 @@ export const Question = () => {
 };
 
 
-//
+///
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -484,6 +485,53 @@ export function FinalScreen({ showModal, onClose, correct, setCorrect }: any) {
   );
 }
 
+////
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+// First, create the thunk
+export const getLanguage = createAsyncThunk(
+  "language/fetchByIdStatus",
+  async (language: any, thunkAPI) => {
+    const response = await axios.get(`http://localhost:4000/${language}`);
+    return response.data;
+  }
+);
+
+// Then, handle actions in your reducers:
+const QuizSlice = createSlice({
+  name: "users",
+  initialState: { questionList: [], isQuiz: false } as any,
+  reducers: {
+    isAnswered: (state, action) => {
+      state.questionList[action.payload].isAnswer = true;
+    },
+    addAnswer: (state, action) => {
+      console.log(action.payload);
+      if (action.payload.id !== 4) {
+        state.questionList[action.payload.id].correctAnswer = [
+          action.payload.value,
+        ];
+      } else {
+        state.questionList[action.payload.id].correctAnswer =
+          action.payload.value;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(getLanguage.fulfilled, (state, action) => {
+      // Add user to the state array
+      console.log(action.payload);
+      state.questionList = action.payload;
+      state.isQuiz = true;
+    });
+  },
+});
+
+// Later, dispatch the thunk as needed in the app
+export const { isAnswered, addAnswer } = QuizSlice.actions;
+export default QuizSlice.reducer;
 
 
 
