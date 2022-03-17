@@ -291,7 +291,7 @@ export default weatherSlice.reducer;
 
 
 
-//
+/
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { weather_api } from "../utils/api_key";
 import axios from "axios";
