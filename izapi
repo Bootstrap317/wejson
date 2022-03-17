@@ -1,0 +1,489 @@
+{
+  "english": [
+    {
+      "id": 0,
+      "questionNo": 1,
+      "question": "What of the following is used in React.js to increase performance?",
+      "options": [
+        "Original DOM",
+        "Virtual DOM",
+        "Both A and B.",
+        "None of the above."
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "Virtual DOM"
+    },
+    {
+      "id": 1,
+      "questionNo": 2,
+      "question": "React merges the object you provide into the current state using setState().",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "True"
+    },
+    {
+      "id": 2,
+      "questionNo": 3,
+      "question": "React.js was Initially released in................",
+      "options": [
+        "May 29,2013",
+        "April 29,2013",
+        "June 29,2013",
+        "May 29,2014"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "May 29,2013"
+    },
+    {
+      "id": 3,
+      "questionNo": 4,
+      "question": " Which of the following is the correct data flow sequence of flux concept?",
+      "options": [
+        "Dispatcher->Action->Store->View",
+        "Action->Dispatcher->View->Store",
+        "Action->Dispatcher->Store->View",
+        "Action->Store->Dispatcher->View"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "Action->Dispatcher->Store->View"
+    },
+    {
+      "id": 4,
+      "questionNo": 5,
+      "question": "React is used mainly for building ................",
+      "options": [
+        "Database",
+        "User interface",
+        "Connectivity",
+        "Design platform",
+        "code optimazation"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": [
+        "User interface",
+        "code optimazation"
+      ]
+    }
+  ],
+  "hindi": [
+    {
+      "id": 0,
+      "questionNo": 1,
+      "question": "निम्नलिखित में से क्या प्रदर्शन बढ़ाने के लिए React.js में उपयोग किया जाता है?",
+      "options": [
+        "मूल डोम",
+        "वर्चुअल डोम",
+        "A और B दोनों।",
+        "इनमे से कोई भी नहीं।"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "वर्चुअल डोम"
+    },
+    {
+      "id": 1,
+      "questionNo": 2,
+      "question": "रिएक्ट सेटस्टेट () का उपयोग करके आपके द्वारा प्रदान की जाने वाली वस्तु को वर्तमान स्थिति में मिला देता है।",
+      "options": [
+        "सत्य",
+        "असत्य"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "सत्य"
+    },
+    {
+      "id": 2,
+      "questionNo": 3,
+      "question": "React.js को प्रारंभ में ................ में जारी किया गया था।",
+      "options": [
+        "मई 29,2013",
+        "अप्रैल 29,2013",
+        "29 जून,2013",
+        "मई 29,2014"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "मई 29,2013"
+    },
+    {
+      "id": 3,
+      "questionNo": 4,
+      "question": "निम्नलिखित में से कौन फ्लक्स अवधारणा का सही डेटा प्रवाह अनुक्रम है?",
+      "options": [
+        "डिस्पैचर-> एक्शन-> स्टोर-> व्यू",
+        "एक्शन-> डिस्पैचर-> व्यू-> स्टोर",
+        "एक्शन-> डिस्पैचर-> स्टोर-> व्यू",
+        "एक्शन-> स्टोर-> डिस्पैचर-> व्यू"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": "एक्शन-> डिस्पैचर-> स्टोर-> व्यू"
+    },
+    {
+      "id": 4,
+      "questionNo": 5,
+      "question": "रिएक्ट मुख्य रूप से निर्माण के लिए प्रयोग किया जाता है ................",
+      "options": [
+        "डेटाबेस",
+        "यूजर इंटरफेस",
+        "कनेक्टिविटी",
+        "डिजाइन प्लेटफॉर्म",
+        "कोड ऑप्टिमाइजेशन"
+      ],
+      "correctAnswer": [],
+      "isAnswer": false,
+      "answer": [
+        "यूजर इंटरफेस",
+        "कोड ऑप्टिमाइजेशन"
+      ]
+    }
+  ]
+}
+
+//
+
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import {TextField,Paper,Button} from '@mui/material';
+import {useState} from 'react'
+import {useNavigate} from "react-router-dom"
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import {getLanguage} from '../slices/QuizSlice'
+import {useAppSelector,useAppDispatch} from "../app/hooks"
+
+export const Home = () => {
+
+	const [name, setName] = useState("");
+	const [gender, setGender] = useState("");
+	const [language, setLanguage] = useState("");
+	const naviagte = useNavigate();
+	const dispatch = useAppDispatch();
+
+
+	const handlerSubmit = (e:any) => {
+		e.preventDefault();
+		console.log(name,gender,language)
+		dispatch(getLanguage(language));
+		naviagte(`/${language}/1`)
+	}
+
+	return(
+		<>
+			<form onSubmit={handlerSubmit}>
+				
+			<Paper sx={{m:10,p:5,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+				<TextField value={name} onChange={(e:any)=>setName(e.target.value)} placeholder="enter your name"/>
+				<FormControl>
+      <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+      <RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        defaultValue="female"
+        name="radio-buttons-group"
+         value={gender}
+        onChange={(e:any)=>setGender(e.target.value)}
+      >
+        <FormControlLabel value="female" control={<Radio />} label="Female" />
+        <FormControlLabel value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="other" control={<Radio />} label="Other" />
+      </RadioGroup>
+    </FormControl>
+
+     <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Language</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={language}
+          label="Age"
+          onChange={(e:any)=>setLanguage(e.target.value)}
+        >
+          <MenuItem value="english">english</MenuItem>
+          <MenuItem value="hindi">hindi</MenuItem>
+        </Select>
+      </FormControl>
+      		<Button type="submit">Submit</Button>
+			</Paper>
+			</form>
+
+		</>
+		)
+}
+
+//
+import { useNavigate, useParams } from "react-router-dom";
+import { Button, Box } from "@mui/material";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useEffect } from "react";
+import { useState } from "react";
+
+import FormGroup from "@mui/material/FormGroup";
+import FormHelperText from "@mui/material/FormHelperText";
+import Checkbox from "@mui/material/Checkbox";
+
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+
+import { isAnswer, addAnswer } from "../slices/QuizSlice";
+import { FinalScreen } from "./FinalScreen";
+
+export const Question = () => {
+  const { questionList, isQuiz } = useAppSelector((state) => state.quiz);
+  const dispatch = useAppDispatch();
+  const [selectedIndex, setselectedIndex] = useState(0);
+  const { language, id } = useParams();
+  const naviagte = useNavigate();
+
+  const [showModal, setShowModal] = useState(false);
+  const [result, setResult] = useState(false);
+  const [correct, setCorrect] = useState(0);
+
+  const handlerClick = (val: any, index: number) => {
+    setselectedIndex(index);
+    naviagte(`/${language}/${index + 1}`);
+  };
+
+  const handlerRadioChange = (event: any, val: any) => {
+    dispatch(isAnswer(val.id));
+    dispatch(addAnswer({ id: val.id, value: event.target.value }));
+  };
+
+  const handlerCheckBox = (event: any, val: any) => {
+    dispatch(isAnswer(val.id));
+
+    const newArr = [...val.correctAnswer];
+    if (event.target.checked && !newArr.includes(event.target.value)) {
+      newArr.push(event.target.value);
+      dispatch(addAnswer({ id: val.id, value: newArr }));
+    } else {
+      let afterremove = newArr.filter((val: any) => val !== event.target.value);
+      dispatch(addAnswer({ id: val.id, value: afterremove }));
+    }
+  };
+
+  let ansArray: any = [];
+  const handlerFinalScreen = () => {
+    setShowModal(true);
+    setResult(false);
+    setCorrect(0);
+
+    questionList.forEach((item: any) => {
+      if (item.id !== 4 && item.answer.includes(item.correctAnswer)) {
+        setCorrect((prev) => prev + 1);
+      }
+    });
+    questionList[4].answer.map((item: any) => {
+      if (questionList[4].correctAnswer.includes(item)) {
+        ansArray.push(true);
+      } else {
+        ansArray.push(false);
+      }
+    });
+
+    if (ansArray.length) {
+      if (ansArray.every((val: boolean) => val === true)) {
+        setResult(true);
+      } else {
+        setResult(false);
+      }
+    }
+    ansArray = [];
+    console.log(result, correct, ansArray);
+  };
+
+  return (
+    <>
+      {isQuiz && (
+        <Box>
+          {questionList.map((item: any, index: number) => {
+            return (
+              <Button
+                onClick={() => handlerClick(item, index)}
+                key={item.id}
+                style={{
+                  backgroundColor: item.isAnswered ? "red" : "grey",
+                  color: "white",
+                  margin: "2px",
+                }}>
+                {item.questionNo}
+              </Button>
+            );
+          })}
+          <h3>QuestionNo: {questionList[selectedIndex].questionNo}</h3>
+          <h3>{questionList.length && questionList[selectedIndex].question}</h3>
+          {questionList[selectedIndex].id !== 4 ? (
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group"
+                onChange={(e) =>
+                  handlerRadioChange(e, questionList[selectedIndex])
+                }>
+                {questionList[selectedIndex].options.map((item: any) => {
+                  return (
+                    <FormControlLabel
+                      value={item}
+                      control={
+                        <Radio
+                          checked={
+                            questionList[selectedIndex].correctAnswer.includes(
+                              item
+                            )
+                              ? true
+                              : false
+                          }
+                        />
+                      }
+                      label={item}
+                    />
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
+          ) : (
+            <FormControl>
+              <FormGroup>
+                {questionList[selectedIndex].options.map((item: any) => {
+                  return (
+                    <FormControlLabel
+                      value={item}
+                      control={
+                        <Checkbox
+                          checked={
+                            questionList[selectedIndex].correctAnswer.includes(
+                              item
+                            )
+                              ? true
+                              : false
+                          }
+                        />
+                      }
+                      label={item}
+                      onChange={(e: any) =>
+                        handlerCheckBox(e, questionList[selectedIndex])
+                      }
+                    />
+                  );
+                })}
+              </FormGroup>
+            </FormControl>
+          )}
+          <Box>
+            {questionList[selectedIndex].id === 4 && (
+              <>
+                <Button onClick={handlerFinalScreen}>submit</Button>
+                <FinalScreen
+                  showModal={showModal}
+                  onClose={() => setShowModal(false)}
+                  correct={result ? correct + 1 : correct}
+                  setCorrect={setCorrect}
+                />
+              </>
+            )}
+          </Box>
+        </Box>
+      )}
+    </>
+  );
+};
+
+
+//
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { PieChart } from "react-minimal-pie-chart";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+export function FinalScreen({ showModal, onClose, correct, setCorrect }: any) {
+  console.log(correct);
+  const correctPer = (correct / 5) * 100;
+  const incorrectPer = 100 - correctPer;
+
+  const { questionList, isQuiz } = useAppSelector((state) => state.quiz);
+
+  return (
+    <Modal
+      open={showModal}
+      onClose={onClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description">
+      <Box sx={style}>
+        <h1>Answer</h1>
+        {questionList.map((item: any) => {
+          if (item.id !== 4) {
+            if (item.answer.includes(item.correctAnswer)) {
+              return (
+                <p>
+                  {item.questionNo} :- {item.answer}
+                </p>
+              );
+            }
+          } else {
+            if (
+              item.correctAnswer.every(
+                (it: any, index: any) => it === item.answer[index]
+              )
+            ) {
+              return (
+                <p>
+                  {item.questionNo} :- {item.answer}
+                </p>
+              );
+            }
+          }
+        })}
+        <PieChart
+          animate={true}
+          style={{ height: "100px" }}
+          data={[
+            { title: "Correct", value: correctPer, color: "green" },
+            {
+              title: "InCorrect",
+              value: incorrectPer,
+              color: "red",
+            },
+          ]}
+        />
+        <p>correctPer :- {correctPer}% </p>
+        <p>incorrectPer :- {incorrectPer}%</p>
+      </Box>
+    </Modal>
+  );
+}
+
+
+
+
