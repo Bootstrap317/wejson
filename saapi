@@ -65,7 +65,7 @@ const AsteroidSlice = createSlice({
 export const { searchTextAction, randomBtnAction } = AsteroidSlice.actions;
 export default AsteroidSlice.reducer;
 
-///
+//
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { getAsteroidDetail } from "../slices/AsteroidSlice";
