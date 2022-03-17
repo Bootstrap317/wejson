@@ -1,0 +1,364 @@
+
+//sc
+import React from "react";
+import { TextField, Button, Box, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { searchCountryAction } from "../slices/weatherSlice";
+import { useNavigate } from "react-router-dom";
+
+export const SearchCountry = () => {
+  const { searchText } = useAppSelector((state) => state.weather);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    navigate(`./${searchText}`);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <Box
+          sx={{ width: "100%", height: "600px" }}
+          display={"flex"}
+          flexDirection={"column"}
+          justifyContent={"center"}
+          alignItems={"center"}>
+          <Typography variant="h4" component="h3" sx={{ m: 2 }}>
+            Weather App
+          </Typography>
+          <TextField
+            size="small"
+            id="standard-basic"
+            value={searchText}
+            onChange={(e) => dispatch(searchCountryAction(e.target.value))}
+            placeholder="Enter Country"
+            aria-label="cost-input"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={!searchText}
+            sx={{ m: 2 }}>
+            Submit
+          </Button>
+        </Box>
+      </form>
+    </>
+  );
+};
+
+///
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getCountryWeather } from "../slices/weatherSlice";
+import { TypographyName } from "./Atomic/TypographyName";
+import { Typography } from "@mui/material";
+import { BoxPaper } from "./Atomic/BoxPaper";
+
+export const DisplayWeather = () => {
+  const { searchText, weatherDetail, isWeatherDataShow } = useAppSelector(
+    (state) => state.weather
+  );
+  const dispatch = useAppDispatch();
+  const { name } = useParams();
+  console.log(weatherDetail);
+
+  useEffect(() => {
+    dispatch(getCountryWeather(name));
+  }, [dispatch, name]);
+
+  return (
+    <>
+      {isWeatherDataShow && (
+        <BoxPaper>
+          <Typography variant="h4" component="h3">
+            Weather Information {name}
+          </Typography>
+          <TypographyName name="Capital" value={weatherDetail.location.name} />
+          <TypographyName
+            name="Temperature"
+            value={weatherDetail.current.temperature}
+            caption="&#8451;"
+          />
+          <TypographyName
+            name="Weather Icon"
+            value={
+              <img
+                src={`${weatherDetail.current.weather_icons}`}
+                alt="icon"
+                height="20px"
+              />
+            }
+          />
+          <TypographyName
+            name="Wind Speed"
+            value={weatherDetail.current.wind_speed}
+            caption="KMPH"
+          />
+          <TypographyName name="Precip" value={weatherDetail.current.precip} />
+        </BoxPaper>
+      )}
+    </>
+  );
+};
+
+///Dw
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getCountryWeather } from "../slices/weatherSlice";
+import { TypographyName } from "./Atomic/TypographyName";
+import { Typography } from "@mui/material";
+import { BoxPaper } from "./Atomic/BoxPaper";
+
+export const DisplayWeather = () => {
+  const { searchText, weatherDetail, isWeatherDataShow } = useAppSelector(
+    (state) => state.weather
+  );
+  const dispatch = useAppDispatch();
+  const { name } = useParams();
+  console.log(weatherDetail);
+
+  useEffect(() => {
+    dispatch(getCountryWeather(name));
+  }, [dispatch, name]);
+
+  return (
+    <>
+      {isWeatherDataShow && (
+        <BoxPaper>
+          <Typography variant="h4" component="h3">
+            Weather Information {name}
+          </Typography>
+          <TypographyName name="Capital" value={weatherDetail.location.name} />
+          <TypographyName
+            name="Temperature"
+            value={weatherDetail.current.temperature}
+            caption="&#8451;"
+          />
+          <TypographyName
+            name="Weather Icon"
+            value={
+              <img
+                src={`${weatherDetail.current.weather_icons}`}
+                alt="icon"
+                height="20px"
+              />
+            }
+          />
+          <TypographyName
+            name="Wind Speed"
+            value={weatherDetail.current.wind_speed}
+            caption="KMPH"
+          />
+          <TypographyName name="Precip" value={weatherDetail.current.precip} />
+        </BoxPaper>
+      )}
+    </>
+  );
+};
+
+
+//DC
+import { Box, Button, Typography } from "@mui/material";
+import { AnyMap } from "immer/dist/internal";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { getCountryName } from "../slices/weatherSlice";
+import { BoxPaper } from "./Atomic/BoxPaper";
+import { TypographyName } from "./Atomic/TypographyName";
+
+export const DisplayCountry = () => {
+  const { countryInfo, isCountryDataShow } = useAppSelector(
+    (state) => state.weather
+  );
+
+  const dispatch = useAppDispatch();
+  const { name } = useParams();
+  const naviagte = useNavigate();
+  console.log(countryInfo);
+
+  useEffect(() => {
+    dispatch(getCountryName(name));
+  }, [dispatch, name]);
+
+  return (
+    <>
+      {isCountryDataShow &&
+        countryInfo.map((country: any, id: any) => {
+          return (
+            <Box key={id} data-testid={`countrylist-${id}`}>
+              <BoxPaper>
+                <Typography variant="h4" component="h3">
+                  Country Information
+                </Typography>
+                <TypographyName name="Country" value={country.name} />
+                <TypographyName name="Capital" value={country.capital} />
+                <TypographyName name="Population" value={country.population} />
+                <TypographyName name="Latlng" value={String(country.latlng)} />
+
+                <img src={`${country.flags.png}`} alt="country photos" />
+                <Button
+                  variant="contained"
+                  onClick={() => naviagte(`/${country.name}/weather`)}
+                  sx={{ m: 3 }}>
+                  Check Weather
+                </Button>
+              </BoxPaper>
+            </Box>
+          );
+        })}
+    </>
+  );
+};
+
+//
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { weather_api } from "../utils/api_key";
+import axios from "axios";
+
+export const getCountryName = createAsyncThunk(
+  "countryapi/api",
+  async (countryName: any) => {
+    try {
+      console.log(countryName);
+      const response = await axios.get(
+        `https://restcountries.com/v2/name/${countryName}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const getCountryWeather = createAsyncThunk(
+  "weatherapi/api",
+  async (countryName: any) => {
+    try {
+      const response = await axios.get(
+        `http://api.weatherstack.com/current?access_key=${e200a73e504322ba2656a1cf8fa4daca}&query=${countryName}`
+      );
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+const initialState: any = {
+  searchText: "",
+  weatherDetail: {},
+  countryInfo: [],
+  isCountryDataShow: false,
+  isWeatherDataShow: false,
+};
+
+export const weatherSlice = createSlice({
+  name: "weather",
+  initialState,
+  reducers: {
+    searchCountryAction: (state, action) => {
+      state.searchText = action.payload.toLowerCase();
+    },
+  },
+  extraReducers: (builder) => {
+    //   country Info
+    builder.addCase(getCountryName.fulfilled, (state, action: any) => {
+      console.log("countryNameList => ", action.payload);
+      state.countryInfo = action.payload;
+      state.isCountryDataShow = true;
+      state.isWeatherDataShow = false;
+    });
+    //   weather
+    builder.addCase(getCountryWeather.fulfilled, (state, action) => {
+      console.log("getCountryWeather => ", action.payload);
+      state.weatherDetail = action.payload;
+      state.isCountryDataShow = false;
+      state.isWeatherDataShow = true;
+    });
+  },
+});
+
+export const { searchCountryAction } = weatherSlice.actions;
+export default weatherSlice.reducer;
+
+
+
+//
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { weather_api } from "../utils/api_key";
+import axios from "axios";
+
+export const getCountryName = createAsyncThunk(
+  "countryapi/api",
+  async (countryName: any) => {
+    try {
+      console.log(countryName);
+      const response = await axios.get(
+        `https://restcountries.com/v2/name/${countryName}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const getCountryWeather = createAsyncThunk(
+  "weatherapi/api",
+  async (countryName: any) => {
+    try {
+      const response = await axios.get(
+        `http://api.weatherstack.com/current?access_key=${weather_api}&query=${countryName}`
+      );
+      return response.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+const initialState: any = {
+  searchText: "",
+  weatherDetail: {},
+  countryInfo: [],
+  isCountryDataShow: false,
+  isWeatherDataShow: false,
+};
+
+export const weatherSlice = createSlice({
+  name: "weather",
+  initialState,
+  reducers: {
+    searchCountryAction: (state, action) => {
+      state.searchText = action.payload.toLowerCase();
+    },
+  },
+  extraReducers: (builder) => {
+    //   country Info
+    builder.addCase(getCountryName.fulfilled, (state, action: any) => {
+      console.log("countryNameList => ", action.payload);
+      state.countryInfo = action.payload;
+      state.isCountryDataShow = true;
+      state.isWeatherDataShow = false;
+    });
+    //   weather
+    builder.addCase(getCountryWeather.fulfilled, (state, action) => {
+      console.log("getCountryWeather => ", action.payload);
+      state.weatherDetail = action.payload;
+      state.isCountryDataShow = false;
+      state.isWeatherDataShow = true;
+    });
+  },
+});
+
+export const { searchCountryAction } = weatherSlice.actions;
+export default weatherSlice.reducer;
