@@ -1,0 +1,165 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { random } from "lodash";
+import { toast } from "react-toastify";
+import { mainInitialType } from "../Types/project.type";
+
+const initialState = {
+  randomAsteroidList: [],
+  selectedAsteroid: {},
+  searchtext: "",
+} as mainInitialType;
+
+export const getAsteroidDetail = createAsyncThunk(
+  "perticular/asteroid",
+  async (asteroidId: any) => {
+    try {
+      const response = await axios.get(
+        `https://api.nasa.gov/neo/rest/v1/neo/${asteroidId}?api_key=tIrVdchjzNyh5KptVhl51CFao1sCK3a2NdAT9IMy`
+      );
+
+      return response.data;
+    } catch (err) {
+      toast.error("Something went wrong while fetching Astroid Details");
+    }
+  }
+);
+
+export const getRandomAsteroidDetail = createAsyncThunk(
+  "random/api",
+  async () => {
+    try {
+      const response = await axios.get(
+        `https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=tIrVdchjzNyh5KptVhl51CFao1sCK3a2NdAT9IMy`
+      );
+
+      return response.data;
+    } catch (err) {
+      toast.error("Something went wrong while fetching random Astroid Details");
+    }
+  }
+);
+
+const AsteroidSlice = createSlice({
+  name: "counter",
+  initialState,
+  reducers: {
+    searchTextAction: (state, action) => {
+      state.searchtext = action.payload;
+    },
+    randomBtnAction: (state) => {
+      let id = random(0, 19);
+      state.searchtext = state.randomAsteroidList[id].id;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getRandomAsteroidDetail.fulfilled, (state, action) => {
+      state.randomAsteroidList = action.payload.near_earth_objects;
+    });
+    builder.addCase(getAsteroidDetail.fulfilled, (state, action) => {
+      state.selectedAsteroid = action.payload;
+    });
+  },
+});
+
+export const { searchTextAction, randomBtnAction } = AsteroidSlice.actions;
+export default AsteroidSlice.reducer;
+
+///
+import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { getAsteroidDetail } from "../slices/AsteroidSlice";
+import { useParams } from "react-router-dom";
+import { BoxPaper } from "./Atomic/BoxPaper";
+import { TypographyName } from "./Atomic/TypographyName";
+import { isEmpty } from "lodash";
+
+export const DisplayAsteroidData = () => {
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  const { selectedAsteroid } = useAppSelector((state) => state.asteroid);
+
+  useEffect(() => {
+    dispatch(getAsteroidDetail(id));
+  }, [id, dispatch]);
+
+  return (
+    <>
+      {!isEmpty(selectedAsteroid) && (
+        <BoxPaper>
+          <TypographyName
+            name="ID"
+            value={selectedAsteroid.id}
+            variant="body2"
+          />
+          <TypographyName name="Name" value={selectedAsteroid.name} />
+          <TypographyName
+            name="nasa_jpl_url"
+            value={selectedAsteroid.nasa_jpl_url}
+          />
+          <TypographyName
+            name="nasa_jpl_url"
+            value={String(selectedAsteroid.is_potentially_hazardous_asteroid)}
+          />
+        </BoxPaper>
+      )}
+    </>
+  );
+};
+
+
+//
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { getRandomAsteroidDetail } from "../slices/AsteroidSlice";
+import { TextField, Button, Typography } from "@mui/material";
+import { searchTextAction, randomBtnAction } from "../slices/AsteroidSlice";
+import { useNavigate } from "react-router-dom";
+import { BoxPaper } from "./Atomic/BoxPaper";
+
+export const Home = () => {
+  const { searchtext } = useAppSelector((state) => state.asteroid);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handlerRandomBtn = async () => {
+    await dispatch(getRandomAsteroidDetail());
+    dispatch(randomBtnAction());
+  };
+
+  return (
+    <>
+      <BoxPaper>
+        <Typography variant="h4" component="h4">
+          Nasa App
+        </Typography>
+        <TextField
+          variant="outlined"
+          placeholder="Enter Asteroid ID"
+          type="number"
+          value={searchtext}
+          onChange={(e) => dispatch(searchTextAction(e.target.value))}
+        />
+        <Button
+          variant="outlined"
+          color="info"
+          sx={{ m: 2 }}
+          onClick={async () => {
+            navigate(`./${searchtext}`);
+          }}
+          disabled={!searchtext}>
+          Submit
+        </Button>
+        <Button
+          variant="contained"
+          color="info"
+          sx={{ mx: 2 }}
+          onClick={handlerRandomBtn}>
+          Random Asteroid
+        </Button>
+      </BoxPaper>
+    </>
+  );
+};
+
+
+///
